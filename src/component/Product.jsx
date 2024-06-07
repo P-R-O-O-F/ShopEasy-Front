@@ -47,51 +47,31 @@ const Product = (props) => {
   };
 
   return (
-    <div>
+    <div className="flex flex-wrap justify-center">
       {singleProduct ? (
-        <div className="product-card single-product">
-          <button onClick={handleBackButton}>Back to list</button>
-          <h1>{singleProduct.title}</h1>
-          <h2>{singleProduct.description}</h2>
-          <img src={singleProduct.image} alt={singleProduct.title} />
-          <div className="product-details">
-            <div className="product-price">
-              <div>Price</div>
-              <div>{singleProduct.price}</div>
-            </div>
+      <div className="max-w-sm rounded overflow-hidden shadow-lg m-4 bg-gray-200">
+      <img className="w-full" src={singleProduct.image} alt={singleProduct.title} />
+          <div className="px-6 py-4">
+            <div className="font-bold text-xl mb-2 text-stone-950">{singleProduct.title}</div>
+            <p className="text-gray-700 text-base ">{singleProduct.description}</p>
           </div>
-          <button
-            style={{ backgroundColor: "red" }}
-            onClick={() => handleDeleteProduct(singleProduct.id)}
-          >
-            Delete
-          </button>
+          <div className="px-6 pt-4 pb-2">
+            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Price: {singleProduct.price}</span>
+          </div>
+          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleDeleteProduct(singleProduct.id)}>Delete</button>
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleBackButton}>Back to list</button>
         </div>
       ) : product ? (
-        <div className="product-list">
-          {product.map((product) => (
-            <div
-              key={product.id}
-              className="product-card"
-              onClick={(event) => handleClickProduct(event, product.id)}
-            >
-              <h1>{product.title}</h1>
-              <h2>{product.description}</h2>
-              <img src={product.image} alt={product.title} />
-              <button
-                style={{
-                  backgroundColor: "red",
-                  display: "flex",
-                  align: "center",
-                  justify: "center",
-                }}
-                onClick={() => handleDeleteProduct(singleProduct.id)}
-              >
-                Delete
-              </button>
+        product.map((product) => (
+          <div key={product.id} className="max-w-sm rounded overflow-hidden shadow-lg m-4 bg-gray-200" onClick={(event) => handleClickProduct(event, product.id)}>
+          <img className="w-full" src={product.image} alt={product.title} />
+            <div className="px-6 py-4">
+              <div className="font-bold text-xl mb-2 text-stone-950">{product.title}</div>
+              <p className="text-gray-700 text-base">{product.description}</p>
             </div>
-          ))}
-        </div>
+            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleDeleteProduct(product.id)}>Delete</button>
+          </div>
+        ))
       ) : (
         <div>Loading...</div>
       )}

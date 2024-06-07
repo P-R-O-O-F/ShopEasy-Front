@@ -10,6 +10,7 @@ const ProductPage = () => {
     return(
         <>
         <Header />
+        
         <h1>Product Page</h1>
         <ProductTemplate />
         <Footer />
