@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../component/Header';
 import Cart from '../component/Cart';
 import Footer from '../component/Footer';
+import withAuth from '../hoc/withAuth';
 
 const CartPage = () => {
     return (
@@ -13,4 +14,4 @@ const CartPage = () => {
     );
 };
 
-export default CartPage;
+export default withAuth(CartPage);

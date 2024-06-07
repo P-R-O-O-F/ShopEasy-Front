@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm({ onShowSignUp }) {
   const [mail, setMail] = useState(Cookies.get('mail') || '');
   const [password, setPassword] = useState('');
   const [isLogged, setIsLogged] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (Cookies.get('access_token')) {
       setIsLogged(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (isLogged) {
+      navigate('/product');
+    }
+  }, [isLogged, navigate]);
 
   const logout = () => {
     Cookies.remove('access_token');
@@ -91,12 +100,14 @@ function LoginForm({ onShowSignUp }) {
                 </button>
               </div>
             </form>
-            <p
-              onClick={onShowSignUp}
-              className="text-blue-500 cursor-pointer underline text-center"
-            >
-              Not already signed up? Click here to SIGN UP!
-            </p>
+            {!isLogged && (
+              <p
+                onClick={onShowSignUp}
+                className="text-blue-500 cursor-pointer underline text-center"
+              >
+                Not already signed up? Click here to SIGN UP!
+              </p>
+            )}
           </div>
         </div>
       ) : (
