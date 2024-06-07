@@ -1,0 +1,36 @@
+.product-card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.product-card img {
+    width: 200px;
+    height: 200px;
+}
+
+.single-product {
+    width: 400px;
+    margin: auto;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    border: 1px solid black;
+}
+
+.product-price {
+    background-color: lightgrey;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
