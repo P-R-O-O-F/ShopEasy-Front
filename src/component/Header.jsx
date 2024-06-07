@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const Header = () => {
-  const token = Cookies.get('access_token');
+  const [token, setToken] = useState(Cookies.get('access_token'));
+
+  useEffect(() => {
+    const handleCookieChange = () => {
+      setToken(Cookies.get('access_token'));
+    };
+
+    // Listen to cookie changes (use a library or a custom solution if needed)
+    const intervalId = setInterval(handleCookieChange, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <header className="bg-gray-800 text-white py-4">
@@ -28,8 +39,10 @@ const Header = () => {
               </>
             )}
           </ul>
-          <Link to="/login">
-            <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300">Connexion</button>
+          <Link to={token ? "/login" : "/login"}>
+            <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300">
+              {token ? "Logout" : "Connexion"}
+            </button>
           </Link>
         </nav>
       </div>

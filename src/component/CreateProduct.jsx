@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Cookies from 'js-cookie';
 
 const CreateProduct = (props) => {
   const [showForm, setShowForm] = useState(false);
@@ -6,7 +7,7 @@ const CreateProduct = (props) => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [color, setColor] = useState('');
-  const [image, setImage] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
   const handleButtonClick = () => {
     setShowForm(true);
@@ -18,15 +19,18 @@ const CreateProduct = (props) => {
     const product = {
       title,
       description,
-      price: parseFloat(price),
+      price: parseInt(price),
       color,
-      image,
+      imageUrl,
     };
+
+    const token = Cookies.get('access_token');
 
     fetch('http://localhost:8000/api/products', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(product),
     })
@@ -37,6 +41,7 @@ const CreateProduct = (props) => {
         setShowForm(false);
       })
       .catch((error) => console.error('Error:', error));
+    console.log(product);
   };
 
   return (
@@ -84,7 +89,7 @@ const CreateProduct = (props) => {
               id="price"
               name="price"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => setPrice(parseInt(e.target.value))}
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
@@ -102,15 +107,15 @@ const CreateProduct = (props) => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="image" className="block text-gray-700 font-bold mb-2">
-              Image:
+            <label htmlFor="imageUrl" className="block text-gray-700 font-bold mb-2">
+              ImageUrl:
             </label>
             <input
               type="text"
-              id="image"
-              name="image"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
+              id="imageUrl"
+              name="imageUrl"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
