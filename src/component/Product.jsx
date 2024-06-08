@@ -5,6 +5,8 @@ const Product = (props) => {
   const [products, setProducts] = useState([]);
   const [singleProduct, setSingleProduct] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const token = Cookies.get('access_token');
@@ -22,12 +24,17 @@ const Product = (props) => {
       .then((responseProducts) => {
         const availableProducts = responseProducts.filter((product) => product.isAvailable);
         setProducts(availableProducts);
+        setLoading(false);
       })
-      .catch((error) => setError(error.message));
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
   }, [props.productsUpdated]);
 
   const handleClickProduct = (id) => {
     const token = Cookies.get('access_token');
+    setLoading(true);
     fetch(`http://localhost:8000/api/products/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -42,15 +49,20 @@ const Product = (props) => {
       })
       .then((responseProduct) => {
         setSingleProduct(responseProduct);
+        setLoading(false);
       })
-      .catch((error) => setError(error.message));
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
   };
 
   const handleDeleteProduct = (id) => {
     const token = Cookies.get('access_token');
     if (window.confirm('Are you sure you want to delete this product?')) {
+      setLoading(true);
       fetch(`http://localhost:8000/api/products/${id}`, {
-        method: 'PATCH',
+        method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -62,13 +74,16 @@ const Product = (props) => {
           return response.json();
         })
         .then(() => {
-          // Remove the deleted product from the list
           setProducts(products.filter(product => product.id !== id));
           if (singleProduct && singleProduct.id === id) {
             setSingleProduct(null);
           }
+          setLoading(false);
         })
-        .catch((error) => setError(error.message));
+        .catch((error) => {
+          setError(error.message);
+          setLoading(false);
+        });
     }
   };
 
@@ -76,16 +91,67 @@ const Product = (props) => {
     setSingleProduct(null);
   };
 
+  const handleAddToCart = (productId, quantity) => {
+    const token = Cookies.get('access_token');
+    const order = {
+      productId,
+      quantity,
+    };
+
+    fetch('http://127.0.0.1:8000/api/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(order),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Order successful:', data);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
+
   return (
     <div className="container mx-auto p-6">
       {error && <div className="text-red-500">{error}</div>}
-      {singleProduct ? (
+      {loading ? (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32"></div>
+        </div>
+      ) : singleProduct ? (
         <div className="max-w-2xl rounded overflow-hidden shadow-lg m-4 bg-white">
           <img className="w-full h-64 object-cover" src={singleProduct.image} alt={singleProduct.title} />
           <div className="p-6">
             <div className="font-bold text-3xl mb-4 text-gray-800">{singleProduct.title}</div>
             <p className="text-gray-700 text-lg mb-4">{singleProduct.description}</p>
             <div className="text-xl font-semibold text-gray-800 mb-4">Price: ${singleProduct.price}</div>
+            <div className="mb-4">
+              <label htmlFor="quantity" className="block text-gray-700 font-bold mb-2">
+                Quantity:
+              </label>
+              <select
+                id="quantity"
+                className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+              >
+                {[1, 2, 3, 4, 5].map((qty) => (
+                  <option key={qty} value={qty}>{qty}</option>
+                ))}
+              </select>
+            </div>
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4" onClick={() => handleAddToCart(singleProduct.id, quantity)}>
+              Add to Cart
+            </button>
             <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-4" onClick={() => handleDeleteProduct(singleProduct.id)}>
               Delete
             </button>
@@ -115,7 +181,9 @@ const Product = (props) => {
             ))}
           </div>
         ) : (
-          <div>Loading...</div>
+          <div className="flex justify-center items-center min-h-screen">
+            <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32"></div>
+          </div>
         )
       )}
     </div>

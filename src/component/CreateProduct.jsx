@@ -7,7 +7,7 @@ const CreateProduct = (props) => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [color, setColor] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [image, setImage] = useState('');
 
   const handleButtonClick = () => {
     setShowForm(true);
@@ -19,9 +19,9 @@ const CreateProduct = (props) => {
     const product = {
       title,
       description,
-      price: parseInt(price),
+      price: parseFloat(price),
       color,
-      imageUrl,
+      image,
     };
 
     const token = Cookies.get('access_token');
@@ -89,7 +89,7 @@ const CreateProduct = (props) => {
               id="price"
               name="price"
               value={price}
-              onChange={(e) => setPrice(parseInt(e.target.value))}
+              onChange={(e) => setPrice(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
@@ -107,15 +107,15 @@ const CreateProduct = (props) => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="imageUrl" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="image" className="block text-gray-700 font-bold mb-2">
               ImageUrl:
             </label>
             <input
               type="text"
-              id="imageUrl"
-              name="imageUrl"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
+              id="image"
+              name="image"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>

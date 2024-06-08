@@ -3,11 +3,10 @@ import React, { useState } from 'react';
 const Inscription = ({ onShowLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setFirstName] = useState('');
+  const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [age, setAge] = useState(null);
-  const [birthCity, setCity] = useState('');
-  const [mail, setMail] = useState('');
+  const [city, setCity] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -20,11 +19,10 @@ const Inscription = ({ onShowLogin }) => {
       body: JSON.stringify({
         username,
         password,
-        name,
+        firstName,
         lastName,
         age,
-        birthCity,
-        mail,
+        city,
       }),
     });
 
@@ -33,7 +31,9 @@ const Inscription = ({ onShowLogin }) => {
       console.log(data);
       onShowLogin();
     } else {
+      console.log(response.json());
       console.log(response);
+      console.log(response.status);
       console.error('Failed to send POST request');
     }
   };
@@ -70,29 +70,16 @@ const Inscription = ({ onShowLogin }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
               First Name
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
-              id="name"
-              name="name"
+              id="firstName"
+              name="firstName"
               required
               onChange={(e) => setFirstName(e.target.value)}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mail">
-              Email
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="email"
-              id="mail"
-              name="mail"
-              required
-              onChange={(e) => setMail(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -118,18 +105,18 @@ const Inscription = ({ onShowLogin }) => {
               id="age"
               name="age"
               required
-              onChange={(e) => setAge(parseInt(e.target.value))}
+              onChange={(e) => setAge((e.target.value))}
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="birthCity">
-              Birth City
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
+              City
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
-              id="birthCity"
-              name="birthCity"
+              id="city"
+              name="city"
               required
               onChange={(e) => setCity(e.target.value)}
             />

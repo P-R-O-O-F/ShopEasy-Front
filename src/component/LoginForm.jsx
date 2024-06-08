@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 function LoginForm({ onShowSignUp }) {
-  const [mail, setMail] = useState(Cookies.get('mail') || '');
+  const [username, setUsername] = useState(Cookies.get('username') || '');
   const [password, setPassword] = useState('');
   const [isLogged, setIsLogged] = useState(false);
 
@@ -14,8 +14,8 @@ function LoginForm({ onShowSignUp }) {
 
   const logout = () => {
     Cookies.remove('access_token');
-    Cookies.remove('mail');
-    setMail('');
+    Cookies.remove('username');
+    setUsername('');
     setIsLogged(false);
     console.log('Logout successful');
   };
@@ -30,7 +30,7 @@ function LoginForm({ onShowSignUp }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        mail,
+        username,
         password,
       }),
     });
@@ -40,7 +40,7 @@ function LoginForm({ onShowSignUp }) {
 
     if (response.ok) {
       Cookies.set('access_token', data.access_token);
-      Cookies.set('mail', mail);
+      Cookies.set('username', username);
       console.log('Login successful');
       setIsLogged(true);
     } else {
@@ -57,16 +57,16 @@ function LoginForm({ onShowSignUp }) {
             <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Login</h1>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mail">
-                  Mail
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                  Username
                 </label>
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="email"
-                  id="mail"
-                  name="mail"
-                  value={mail}
-                  onChange={(e) => setMail(e.target.value)}
+                  type="username"
+                  id="username"
+                  name="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <div className="mb-6">
@@ -102,7 +102,7 @@ function LoginForm({ onShowSignUp }) {
       ) : (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
           <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800">Welcome, {mail}!</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-800">Welcome, {username}!</h1>
             <button
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               onClick={logout}
